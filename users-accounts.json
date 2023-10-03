@@ -1,0 +1,16 @@
+{
+    "accounts": [
+      {
+        "username": "aman",
+        "password": 1234
+      },
+      {
+        "username": "betho",
+        "password": "pa$$word"
+      },
+      {
+        "username": "camcam",
+        "password": "Default"
+      }
+    ]
+  }
