@@ -1,33 +1,46 @@
+# I imported this JSON file to parse user data (key-value pairs)
+# without dealing with extra information from users-account-info.txt.
+# JSON was chosen for its simplicity and suitability for this task.
 import json
 
-#open my user-accounts file so I can parse to json
+#FUNCTION 1: Open the user-accounts file to parse it in JSON. 
 
 with open('users-accounts.json', 'r') as f:
     bank_data = json.load(f)
-input_username = input("Enter your username: ")
+input_username = input("Admin use: Enter a user's name: ")
 
 for account in bank_data["accounts"]:
 
     if input_username.lower() == account["username"].lower():
 
-        input_password = input("Enter your password: ")
-        if input_password == account["password"]:
-            print("Correct Password!")
-        else:
+        input_password = input("Admin use: Enter a user's password: ")
+        user_password = account["password"]
+   
+    # Handle the case where the stored password is an integer.
+        if isinstance(user_password, int):
+            try:
+    # this try catch tries to convert my stored password to an integer
+                input_password = int(input_password)
+    # Attempt to convert the user's input to an integer.
+            except ValueError:
+    # If the conversion fails, print an error message and exit.
+                print("Incorrect password.")
+                break
+
+        if input_password == user_password:
+            print("Correct password")
+        else: 
             print("Incorrect password.")
         break
 else:
-    print("Username not found")
+        print("Username not found")
 
-  
-
-
-# Print all
+# FUNCTION 2: Get all users information.
 
 def bank_account_dictionary(user_accounts):
     bank_files = open(user_accounts, "r").readlines()
 
-    #dictionary 
+    # Dictionary to store user information
     bank_accounts = {}
 
     for files in bank_files:
@@ -39,41 +52,120 @@ def bank_account_dictionary(user_accounts):
         account_balance = split_file_list[3]
 
 
-        bank_accounts[account_name] = str(account_password)
-        bank_accounts[full_name] = str(account_balance)
+        bank_accounts[account_name] = {
+            "password": str(account_password),
+            "fullname": full_name,
+            "balance": float(account_balance)
+        }
     return bank_accounts
 
-# print(bank_account_dictionary("users-account-info.txt"))
-    
+# Print all user information.
 
-# Storing my user-account-info in a user_accounts.
+def print_all_users_info(accounts_dict):
+    for username, info in accounts_dict.items():
+        print(f"Username: {username}")
+        print(f"Password: {info['password']}")
+        print(f"Full Name: {info['fullname']}")
+        print(f"Blance: {info['balance']}" )
+        print()
 
-# user_accounts = 'users-account-info.txt'
+# Get the bank accounts dictionary 
+bank_account_dict = bank_account_dictionary("users-account-info.txt")
 
-# read_user_accounts = open(user_accounts, 'r')
+user_choice = input("Do you want to print all the user information? (yes/no)").strip().lower()
 
-# #read.lines() will create a list where each 
-# #element iws a line from the user-account-info
+if user_choice == "yes":
 
-# lines = read_user_accounts.readlines()
+    print_all_users_info(bank_account_dict)
+else:
+    print("No user information will be printed")
 
+# FUNCTION 3: Login In to get user information.
 
-# #Dictionary for my account users
+user_data = {
+    "aman": {
+        "username": "aman",
+        "password": 1234,
+        "fullname": "Andy Allman",
+        "balance": 1000
+    },
 
-# bank_accounts = {}
+    "betho": {
+        "username": "betho",
+        "password": "pa$$word",
+        "fullname": "Beth Beto",
+        "balance": 2000
+    },
 
-# for line in lines:
-#     # Strip puts on new line
-#     stripped_line = line.strip()
-#     # split use delimiter to format
-#     split_line = stripped_line.split(',')
+    "camcam": {
+        "username": "camcam",
+        "password": "default",
+        "fullname": "Cameron Clay",
+        "balance": 3000
+    },
+}
 
-#     #access key and value from split line.
-#     key = split_line[0]
-#     value = split_line[1]
+print("User Log In Menu: ")
+# Personal note: username and password are parameters in my login function,
+# They are later called as arguments when I invoke my login() function. 
+def login(username, password):
+    if username in user_data:
+# Retrieve user information from the user_data dictionary. 
+        user = user_data[username]
+        stored_password = account["password"]
+# Check if the stored password is an integer and convert is to a string if needed.
+        if isinstance(stored_password, int):
+            stored_password = str(stored_password)
+        if password == stored_password:
+            return user["fullname"], user["balance"]
+        else:
+            return None
+    else:
+        return None
 
-#     # add to bank_accounts dictionary 
-#     bank_accounts[key] = value
-   
+#Prompt the user for their name and password.
+user_input = input("Enter your name: ")
+password_input = input("Enter your password: ")
 
-# print(bank_accounts)
+#Attempt to log in using the provided credentials. 
+result = login(user_input, password_input)
+
+if result:
+# If login is successful, extract and print user information.
+    fullname, balance = result
+    print("Login a success!")
+    print("User:", fullname)
+    print("Balance:", balance)
+else:
+    print("Bummer! Log in failed.")
+
+###################################################################################
+
+# Pseudocode:
+# Create an empty dictionary to store user information
+# user_information_dict = {}
+
+# Function login(username, password)
+#   PROMPT for username input
+#   INPUT username
+#   PROMPT for password input
+#   INPUT password
+
+#   IF username exists in user_information_dict AND password matches the stored password
+#       RETURN user_information_dict[username]["fullname"] and user_information_dict[username]["balance"]
+#   ELSE
+#       RETURN None
+
+# Prompt the user for their username and password
+# user_input = INPUT "Enter your username: "
+# password_input = INPUT "Enter your password: "
+
+# Call the login function with user_input and password_input as arguments
+# result = login(user_input, password_input)
+
+# IF result is not None
+#   PRINT "Login successful!"
+#   PRINT "User:", result[0]  # Fullname
+#   PRINT "Balance:", result[1]  # Balance
+# ELSE
+#   PRINT "Bummer! Login failed."
