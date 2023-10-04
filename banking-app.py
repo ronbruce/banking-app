@@ -112,7 +112,7 @@ def login(username, password):
     if username in user_data:
 # Retrieve user information from the user_data dictionary. 
         user = user_data[username]
-        stored_password = account["password"]
+        stored_password = user["password"]
 # Check if the stored password is an integer and convert is to a string if needed.
         if isinstance(stored_password, int):
             stored_password = str(stored_password)
